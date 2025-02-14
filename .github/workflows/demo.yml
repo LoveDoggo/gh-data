@@ -25,9 +25,21 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+            name: website-build
+            path: |
+              dist
+              package.json
   deploy:
     needs: build
     runs-on: macos-latest
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: website-build
+          path: ./dist/ # 다운로드할 폴더 경로
       - name: Deploy
         run: echo "Deploying..."
